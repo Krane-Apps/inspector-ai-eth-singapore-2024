@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>InspectorAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+  <div class="container">
+    <h1 class="title">InspectorAI</h1>
+    <div class="search-bar">
+      <input type="text" id="contractAddress" placeholder="Enter contract address" class="input-field">
+      <button id="analyzeButton" class="analyze-button">Analyze</button>
+    </div>
+    <div id="loadingIndicator" class="loading" style="display: none;">
+      <p>Analyzing contract... Please wait.</p>
+    </div>
+    <div id="results" class="results" style="display: none;"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
