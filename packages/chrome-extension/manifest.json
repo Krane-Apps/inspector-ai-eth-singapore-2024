@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "InspectorAI",
+  "version": "1.0",
+  "description": "Analyze smart contracts using AI models",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.etherscan.io/*",
+    "https://api.anthropic.com/*",
+    "https://*/*",
+    "https://pump.fun/*",
+    "https://www.pinksale.finance/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon16.png",
+    "48": "icon16.png",
+    "128": "icon16.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://pump.fun/*",
+        "https://www.pinksale.finance/*"
+      ],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["high_risk.png", "moderate_risk.png", "low_risk.png", "neutral.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
