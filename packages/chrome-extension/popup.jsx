@@ -70,19 +70,6 @@ function Popup() {
     );
   };
 
-  // get tone image
-  const getToneImage = (summary) => {
-    const baseUrl = chrome.runtime.getURL("images/");
-    if (summary.toLowerCase().includes('high risk') || summary.toLowerCase().includes('suspicious')) {
-      return baseUrl + "high_risk.png";
-    } else if (summary.toLowerCase().includes('moderate risk') || summary.toLowerCase().includes('caution')) {
-      return baseUrl + "moderate_risk.png";
-    } else if (summary.toLowerCase().includes('low risk') || summary.toLowerCase().includes('safe')) {
-      return baseUrl + "low_risk.png";
-    }
-    return baseUrl + "neutral.png";
-  };
-
   return (
     <div className="container">
       <h1 className="title">InspectorAI</h1>
@@ -108,25 +95,19 @@ function Popup() {
       {/* loading */}
       {isLoading && (
         <div className="loading">
-          <p>Analyzing contract... Please wait.</p>
+          <p>Please wait, this can take up to 2 minutes.</p>
         </div>
       )}
 
       {/* results */}
       {!isLoading && contractAddress && (
         <div className="results">
-          <h2>Contract Analysis</h2>
-          <p><strong>Contract Address:</strong> {contractAddress}</p>
-          
-          <h3>Summary</h3>
-          <div className="summary-container">
-            <img src={getToneImage(tokenSummary)} alt="Risk level" className="tone-image" />
-            <pre className="summary-text">{tokenSummary}</pre>
-          </div>
-          
           {fullTokenData && (
             <>
               <h3>Contract Details</h3>
+              <p>
+              <strong>Contract Address:</strong>  {contractAddress || 'N/A'}
+              </p>
               <p>
                 <strong>Contract Name:</strong> {fullTokenData.sourceCode?.ContractName || 'N/A'}
               </p>
@@ -160,9 +141,14 @@ function Popup() {
             </>
           )}
           
+          <h3>Summary</h3>
+          <div className="summary-container">
+            <pre className="summary-text">{tokenSummary}</pre>
+          </div>
+          
           {aiReview && (
             <>
-              <h3>AI Review</h3>
+              <h3>OpenAI Analysis</h3>
               <div className="ai-review">
                 <p>{aiReview}</p>
               </div>

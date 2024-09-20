@@ -33,7 +33,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [],
+      "resources": ["images/*"],
       "matches": ["<all_urls>"]
     }
   ],

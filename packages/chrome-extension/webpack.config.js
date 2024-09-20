@@ -8,7 +8,7 @@ module.exports = {
     contentScript: './contentScript.js'
   },
   output: {
-    filename: '[name].js',
+    filename: '[name]-output.js',
     path: path.resolve(__dirname)
   },
   module: {

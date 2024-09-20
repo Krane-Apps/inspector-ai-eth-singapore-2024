@@ -5,17 +5,20 @@
   <title>InspectorAI</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="dark-mode">
+<body>
   <div class="container">
-    <h1 class="title">InspectorAI</h1>
+    <div class="header">
+      <img src="images/icon16.png" alt="InspectorAI Logo" class="logo">
+      <h1 class="title">InspectorAI</h1>
+    </div>
     <div class="search-bar">
       <input type="text" id="contractAddress" placeholder="Enter contract address" class="input-field">
-      <button id="analyzeButton" class="analyze-button">Analyze</button>
+      <button id="analyzeButton" class="analyze-button" disabled>Analyze</button>
     </div>
-    <div id="loadingIndicator" class="loading" style="display: none;">
-      <p>Analyzing contract... Please wait.</p>
+    <div id="loadingIndicator" class="loading hidden">
+      <p>Please wait, this can take up to 2 minutes.</p>
     </div>
-    <div id="results" class="results" style="display: none;"></div>
+    <div id="results" class="results hidden"></div>
   </div>
   <script src="popup.js"></script>
 </body>
