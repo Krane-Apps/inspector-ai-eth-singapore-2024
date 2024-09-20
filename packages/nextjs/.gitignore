@@ -35,3 +35,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# don't push lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
