@@ -4,37 +4,30 @@ pragma solidity ^0.8.26;
 contract InspectorAI {
     struct Review {
         address reviewer;
-        bool isThumbsUp;
+        uint8 rating;
         string comment;
     }
 
     mapping(address => mapping(address => bool)) private hasReviewed;
     mapping(address => Review[]) private contractReviews;
 
-    event ReviewAdded(address indexed contractAddress, address indexed reviewer, bool isThumbsUp, string comment);
+    event ReviewAdded(address indexed contractAddress, address indexed reviewer, uint8 rating, string comment);
 
     modifier notReviewed(address _contractAddress) {
         require(!hasReviewed[msg.sender][_contractAddress], "You have already reviewed this contract");
         _;
     }
 
-    function thumbsUp(address _contractAddress) external notReviewed(_contractAddress) {
-        _addReview(_contractAddress, true, "");
+    modifier validRating(uint8 _rating) {
+        require(_rating >= 1 && _rating <= 5, "Rating must be between 1 and 5");
+        _;
     }
 
-    function thumbsDown(address _contractAddress) external notReviewed(_contractAddress) {
-        _addReview(_contractAddress, false, "");
-    }
-
-    function addReview(address _contractAddress, bool _isThumbsUp, string memory _comment) external notReviewed(_contractAddress) {
-        require(bytes(_comment).length > 0, "Comment cannot be empty");
-        _addReview(_contractAddress, _isThumbsUp, _comment);
-    }
-
-    function _addReview(address _contractAddress, bool _isThumbsUp, string memory _comment) private {
+    function addReview(address _contractAddress, uint8 _rating, string memory _comment) external notReviewed(_contractAddress) validRating(_rating) {
         hasReviewed[msg.sender][_contractAddress] = true;
-        contractReviews[_contractAddress].push(Review(msg.sender, _isThumbsUp, _comment));
-        emit ReviewAdded(_contractAddress, msg.sender, _isThumbsUp, _comment);
+        contractReviews[_contractAddress].push(Review(msg.sender, _rating, _comment));
+        
+        emit ReviewAdded(_contractAddress, msg.sender, _rating, _comment);
     }
 
     function getReviews(address _contractAddress) external view returns (Review[] memory) {
