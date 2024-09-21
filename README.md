@@ -1,81 +1,83 @@
-# 🏗 Scaffold-ETH 2
+# <img src="packages/chrome-extension/images/logo.gif" alt="InspectorAI Logo" width="30" height="30" style="vertical-align: middle;"> InspectorAI: Smart Contract Analysis Tool
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+InspectorAI is a powerful tool designed to analyze and provide insights into smart contracts across multiple blockchain networks. It combines the capabilities of AI with blockchain technology to offer developers and users a comprehensive understanding of contract functionality and potential issues.
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+## Contract Addresses
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+| Chain     | Contract Type | Address                                                                                                                                            |
+| --------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sepolia   | Chainlink     | [0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5](https://sepolia.etherscan.io/address/0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5)                      |
+| Sepolia   | Basic         | [0x1c0042641A974a4411234DD68dfF22e9765e416F](https://sepolia.etherscan.io/address/0x1c0042641A974a4411234DD68dfF22e9765e416F)                      |
+| Rootstock | Basic         | [0x78858Ab1Ad13C0a5829e06f89A9706a9Ba9A6791](https://explorer.testnet.rootstock.io/address/0x78858ab1ad13c0a5829e06f89a9706a9ba9a6791?__ctab=Code) |
+| Morph     | Basic         | [0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7](https://explorer-holesky.morphl2.io/address/0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7?tab=contract)  |
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+## The Problem
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+Smart contracts are becoming increasingly complex and critical in the blockchain ecosystem. However, understanding their functionality, identifying potential vulnerabilities, and ensuring their reliability can be challenging. InspectorAI addresses these issues by providing:
 
-## Requirements
+-   Automated analysis of smart contract code
+-   Detection of common vulnerabilities and security risks
+-   Insights into contract functionality and behavior
+-   Cross-chain compatibility checks
+-   AI-powered suggestions for code improvements
 
-Before you begin, you need to install the following tools:
+## Getting Started
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+To start using InspectorAI:
 
-## Quickstart
+1. Visit our web application at [https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum](https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum)
+2. Connect your wallet and select the network you want to analyze
+3. Input the smart contract address or code you wish to inspect
+4. Review the AI-generated analysis and recommendations
 
-To get started with Scaffold-ETH 2, follow the steps below:
+For developers looking to contribute or run the project locally, please refer to the "Deployment and Verification" section above.
 
-1. Clone this repo & install dependencies
+## How It's Made
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
+InspectorAI leverages cutting-edge technologies and methodologies:
 
-2. Run a local network in the first terminal:
+1. **Chrome Extension**: The primary point of contact for users, providing easy access to InspectorAI's features directly from their browser.
 
-```
-yarn chain
-```
+2. **AI Integration**: Utilizes advanced machine learning models like Claude 3 to analyze smart contract code and provide intelligent insights.
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
+3. **Multi-Chain Support**: Built to work across various blockchain networks, including Ethereum, Rootstock, and Morph.
 
-3. On a second terminal, deploy the test contract:
+4. **React & Next.js Frontend**: A user-friendly interface built with React and Next.js for seamless interaction with the tool.
 
-```
-yarn deploy
-```
+5. **Solidity Smart Contracts**: Custom smart contracts deployed on multiple chains to facilitate the analysis process.
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
+6. **Chainlink Integration**: Incorporates Chainlink CCIP for cross-chain communication users can add a review on a different chain while they are on a different chain.
 
-4. On a third terminal, start your NextJS app:
+7. **Scaffold-ETH 2**: Built on top of the Scaffold-ETH 2 framework, providing a robust foundation for rapid development and deployment.
 
-```
-yarn start
-```
+## Deployment and Verification
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+The InspectorAI contracts have been deployed and verified on multiple networks:
 
-**What's next**:
+1. Clone the repository and install dependencies:
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
-- Edit your smart contract test in: `packages/hardhat/test`. To run test use `yarn hardhat:test`
+    ```
+    git clone https://github.com/Krane-Apps/inspector-ai-eth-singapore-2024
+    cd inspector-ai
+    yarn install
+    ```
 
-## Documentation
+2. Deploy to a local network for testing:
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+    ```
+    yarn chain
+    yarn deploy
+    ```
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+3. To deploy to a public testnet or mainnet, update the `hardhat.config.ts` with the appropriate network settings and run:
 
-## Contributing to Scaffold-ETH 2
+    ```
+    yarn deploy --network <network-name>
+    ```
 
-We welcome contributions to Scaffold-ETH 2!
+4. Verify the contracts on block explorers using the provided script:
+    ```
+    yarn verify --network <network-name>
+    ```
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+For more detailed instructions on deployment and verification, please refer to our documentation.
