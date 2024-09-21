@@ -1,6 +1,7 @@
 # InspectorAI: Smart Contract Analysis Tool
 
-![logo](https://github.com/user-attachments/assets/10651b58-1b55-4b3d-a160-7157fb3aa135)
+<img src="https://github.com/user-attachments/assets/10651b58-1b55-4b3d-a160-7157fb3aa135" alt="logo" width="30" height="30">
+
 InspectorAI is a powerful tool designed to analyze and provide insights into smart contracts across multiple blockchain networks. It combines the capabilities of AI with blockchain technology to offer developers and users a comprehensive understanding of contract functionality and potential issues.
 
 ## Contract Addresses
@@ -31,7 +32,6 @@ To start using InspectorAI:
 
     - You can install the Chrome extension by cloning this repo and loading it as an unpacked extension in Chrome.
     - We have submitted the extension for review on the Chrome Web Store, but it is currently pending approval. This process can take a few days.
-    - Please refer to the image below to see the current review status:
 
     ![Chrome Web Store Review Status](https://github.com/user-attachments/assets/00a8f9d0-db53-4c93-9541-507128031404)
 
