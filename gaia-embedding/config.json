@@ -1,0 +1,6 @@
+{
+    "embedding": "https://huggingface.co/gaianet/nomic-embed-text-gguf/resolve/main/nomic-embed-text-v1.5.f16.gguf",
+    "embedding_ctx_size": "8192",
+    "embedding_batch_size": "8192",
+    "snapshot": "https://huggingface.co/datasets/max-id/gaianet-qdrant-snapshot/resolve/main/smart-contract-defects-490d63bd-05b6-4a1c-98f1-882f0cd1af5c/smart-contract-defects-490d63bd-05b6-4a1c-98f1-882f0cd1af5c.snapshot"
+}
