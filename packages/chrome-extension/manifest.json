@@ -26,7 +26,8 @@
     {
       "matches": [
         "https://pump.fun/*",
-        "https://www.pinksale.finance/*"
+        "https://www.pinksale.finance/*",
+        "https://coinmarketcap.com/*"
       ],
       "js": ["contentScript.js"]
     }

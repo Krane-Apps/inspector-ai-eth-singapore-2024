@@ -5,10 +5,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ success: true });
       })
       .catch((error) => {
-        console.error('background.js: error analyzing contract:', error);
+        console.error('Error analyzing contract:', error);
         sendResponse({ success: false, error: error.message });
       });
-    return true; // keeps the message channel open for async response
+    return true; 
   }
 });
 

@@ -1,44 +1,66 @@
-console.log('InspectorAI: Content script loaded');
+console.log('InspectorAI content script loaded');
 
-function injectAnalyzeButton() {
-  const addressElement = document.querySelector('a[href^="https://etherscan.io/address/"]');
-  if (!addressElement) return;
+function injectAiAuditButton() {
+  // find all span elements with a 'title' attribute that looks like an Ethereum address
+  const addressElements = document.querySelectorAll('span[title^="0x"]');
 
-  const contractAddress = addressElement.href.split('/').pop();
+  addressElements.forEach((addressElement) => {
+    const contractAddress = addressElement.getAttribute('title');
 
-  const analyzeButton = document.createElement('button');
-  analyzeButton.textContent = 'Analyze with InspectorAI';
-  analyzeButton.style.cssText = `
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-  `;
-
-  analyzeButton.addEventListener('click', () => {
-    chrome.runtime.sendMessage({
-      action: 'analyzeContract',
-      address: contractAddress
-    }, (response) => {
-      if (response.success) {
-        alert('Contract analysis started. Please check the InspectorAI extension popup for results.');
-      } else {
-        alert('Error starting contract analysis: ' + response.error);
+    // validate if the contractAddress is a valid Ethereum address
+    if (/^0x[a-fA-F0-9]{40}$/.test(contractAddress)) {
+      // check if we've already added the button to prevent duplicates
+      if (
+        addressElement.nextSibling &&
+        addressElement.nextSibling.classList &&
+        addressElement.nextSibling.classList.contains('ai-audit-button')
+      ) {
+        return; // skip if button already exists
       }
-    });
-  });
 
-  addressElement.parentNode.insertBefore(analyzeButton, addressElement.nextSibling);
+      // create the "AI Audit" button
+      const aiAuditButton = document.createElement('button');
+      aiAuditButton.textContent = '✨ AI Audit';
+      aiAuditButton.style.cssText = `
+        background-color: #6A0DAD;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        font-size: 12px;
+        margin-left: 10px;
+        cursor: pointer;
+        border-radius: 3px;
+      `;
+      aiAuditButton.classList.add('ai-audit-button');
+
+      // add click event listener to the button
+      aiAuditButton.addEventListener('click', () => {
+        chrome.runtime.sendMessage(
+          {
+            action: 'analyzeContract',
+            address: contractAddress,
+          },
+          (response) => {
+            if (response.success) {
+              alert('Contract analysis started. Please check the InspectorAI extension popup for results.');
+            } else {
+              alert('Error starting contract analysis: ' + response.error);
+            }
+          }
+        );
+      });
+
+      // insert the button next to the contract address element
+      addressElement.parentNode.insertBefore(aiAuditButton, addressElement.nextSibling);
+    }
+  });
 }
 
-injectAnalyzeButton();
+// initial injection of the AI Audit button
+injectAiAuditButton();
 
-const observer = new MutationObserver(injectAnalyzeButton);
+// observe for dynamic content changes 
+const observer = new MutationObserver(() => {
+  injectAiAuditButton();
+});
 observer.observe(document.body, { childList: true, subtree: true });
