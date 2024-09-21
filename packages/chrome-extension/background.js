@@ -55,6 +55,9 @@ async function fetch1inchData(address) {
     // fetch token info
     const tokenInfoUrl = `${baseUrl}?url=https://api.1inch.dev/swap/v5.2/1/tokens`;
     const tokenInfoResponse = await fetch(tokenInfoUrl);
+    if (!tokenInfoResponse.ok) {
+      throw new Error(`HTTP error! status: ${tokenInfoResponse.status}`);
+    }
     const tokenInfoData = await tokenInfoResponse.json();
     oneInchData.tokenInfo = tokenInfoData.tokens[address];
 
@@ -71,8 +74,33 @@ async function fetch1inchData(address) {
     console.log('1inch data:', oneInchData);
     return oneInchData;
   } catch (error) {
-    console.error('Error fetching 1inch data:', error);
-    return null;
+    console.error('Error fetching 1inch and Etherscan data:', error);
+    return {
+      error: error.message,
+      tokenInfo: null,
+      liquiditySources: null,
+      transactions: []
+    };
+  }
+}
+
+async function fetchTokenTransactions(address) {
+  const apiKey = 'YTUI3CYCZCUNYG93VC223F4Q9HC4ZFIBBI'; // Your Etherscan API key
+  const url = `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${address}&page=1&offset=100&sort=desc&apikey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === '1') {
+      return data.result;
+    } else {
+      console.error('Error fetching token transactions:', data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching token transactions:', error);
+    return [];
   }
 }
 
@@ -120,7 +148,7 @@ async function getAIReview(contractData) {
   const apiKey = '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';
   const url = 'https://api.anthropic.com/v1/messages';
 
-  const prompt = `Analyze the following smart contract:
+  const prompt = `Analyze the following smart contract in great detail:
     Contract Address: ${contractData.contractAddress}
     Contract Name: ${contractData.sourceCode?.ContractName || 'N/A'}
     Compiler Version: ${contractData.sourceCode?.CompilerVersion || 'N/A'}
@@ -130,27 +158,34 @@ async function getAIReview(contractData) {
     Token Info: ${JSON.stringify(contractData.oneInchData?.tokenInfo || {})}
     Balance: ${JSON.stringify(contractData.oneInchData?.balance || {})}
     Liquidity Sources: ${JSON.stringify(contractData.oneInchData?.liquiditySources || {})}
+    Token Transactions (last 100):
+    ${JSON.stringify(contractData.oneInchData?.transactions || [])}
     
-    Provide a comprehensive analysis of the contract's functionality, potential vulnerabilities, and overall assessment. Focus on the following points:
+    Provide an extremely comprehensive and detailed analysis of the contract's functionality, potential vulnerabilities, and overall assessment. Focus on the following points:
 
-    1. Contract purpose and main features
-    2. Token economics (if applicable)
-    3. Security measures implemented
-    4. Potential vulnerabilities or red flags
-    5. Unusual or noteworthy functions
-    6. Compliance with standard practices
-    7. Analysis of 1inch data (token info, balance, and liquidity sources)
+    1. Contract purpose and main features (go into depth on each feature)
+    2. Token economics (if applicable, provide a detailed breakdown)
+    3. Security measures implemented (analyze each measure thoroughly)
+    4. Potential vulnerabilities or red flags (discuss each one in detail)
+    5. Unusual or noteworthy functions (explain their purpose and potential implications)
+    6. Compliance with standard practices (compare with industry standards)
+    7. Detailed analysis of 1inch data (token info, liquidity sources, allowance, and swap quote)
+    8. In-depth analysis of token transactions (patterns, large transfers, suspicious activities)
+    9. Any suspicious patterns or concerns based on the provided data (elaborate on each concern)
+    10. Potential impact on users and the broader ecosystem
+    11. Comparison with similar contracts or tokens in the market
+    12. Recommendations for improvements or further security measures
 
-    Based on your analysis, categorize the contract's risk level as one of the following:
+    Based on your thorough analysis, categorize the contract's risk level as one of the following:
     - "High Risk": If the contract has significant vulnerabilities or suspicious features
     - "Moderate Risk": If the contract has some potential issues that require caution
     - "Low Risk": If the contract appears to be relatively safe but still requires careful consideration
     
     Include the exact risk level phrase in your response.
     
-    Conclude with a summary of the contract's strengths and weaknesses, and any recommendations for users interacting with this contract.
+    Conclude with a detailed summary of the contract's strengths and weaknesses, and provide comprehensive recommendations for users interacting with this contract.
 
-    Limit your response to 250 tokens.`;
+    Be as thorough and detailed as possible in your analysis, using all the available information.`;
 
   try {
     const response = await fetch(url, {
@@ -163,7 +198,7 @@ async function getAIReview(contractData) {
       },
       body: JSON.stringify({
         model: "claude-3-opus-20240229",
-        max_tokens: 250,
+        max_tokens: 4000,  
         messages: [
           { role: "user", content: prompt }
         ]
@@ -187,11 +222,11 @@ async function getAIReview(contractData) {
 
 function generateSummary(aiReview) {
   if (aiReview.includes('High Risk')) {
-    return 'High Risk: The contract has significant vulnerabilities or suspicious features.';
+    return '⛔ High Risk: The contract has significant vulnerabilities or suspicious features.';
   } else if (aiReview.includes('Moderate Risk')) {
-    return 'Moderate Risk: The contract has some potential issues that require caution.';
+    return '⛔ Moderate Risk: The contract has some potential issues that require caution.';
   } else if (aiReview.includes('Low Risk')) {
-    return 'Low Risk: The contract appears to be relatively safe, but always exercise caution.';
+    return '✅ Low Risk: The contract appears to be relatively safe, but always exercise caution.';
   }
   return 'Neutral: Unable to determine risk level. Please review the full AI analysis.';
 }

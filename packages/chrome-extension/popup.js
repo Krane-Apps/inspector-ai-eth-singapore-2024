@@ -3,6 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const analyzeButtonElement = document.getElementById('analyzeButton');
   const loadingElement = document.getElementById('loadingIndicator');
   const resultsElement = document.getElementById('results');
+  const searchBarElement = document.getElementById('searchBar');
+  const backButtonElement = document.createElement('a');
+
+  backButtonElement.textContent = '← back';
+  backButtonElement.className = 'back-link';
+  backButtonElement.href = '#';
+  backButtonElement.style.display = 'none';
 
   let inputAddress = '';
   let contractAddress = '';
@@ -29,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleAnalyze() {
     if (inputAddress.trim() !== '') {
       isLoading = true;
+      updateUI(); 
       // clear results
       contractAddress = '';
       tokenSummary = '';
@@ -50,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
             isLoading = false;
             // Show error
             alert(`Error analyzing contract: ${response.error}`);
+            updateUI();
           }
-          updateUI();
         }
       );
     }
@@ -69,11 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
           aiReview = result.aiReview;
           oneInchData = result.oneInchData ? JSON.parse(result.oneInchData) : null;
           isLoading = false;
+          updateUI();
         } else {
           // Retry
           setTimeout(checkForResults, 1000);
         }
-        updateUI();
       }
     );
   }
@@ -86,37 +94,35 @@ document.addEventListener('DOMContentLoaded', function() {
     
     loadingElement.style.display = isLoading ? 'block' : 'none';
     resultsElement.style.display = !isLoading && contractAddress ? 'block' : 'none';
+    searchBarElement.style.display = !isLoading && !contractAddress ? 'block' : 'none';
+    backButtonElement.style.display = !isLoading && contractAddress ? 'inline-block' : 'none';
 
     if (!isLoading && contractAddress) {
       let resultsHTML = '';
       
+      resultsHTML += `<div class="back-link-container">${backButtonElement.outerHTML}</div>`;
+
       if (fullTokenData) {
         resultsHTML += `
-          <h3>Contract Details</h3>
-          <p><strong>Contract Address:</strong> ${contractAddress || 'N/A'}</p>
-          <p><strong>Contract Name:</strong> ${fullTokenData.sourceCode?.ContractName || 'N/A'}</p>
-          <p><strong>Compiler Version:</strong> ${fullTokenData.sourceCode?.CompilerVersion || 'N/A'}</p>
+          <div class="contract-info-card">
+            <h3>Contract Details</h3>
+            <p><strong>Contract Address:</strong> ${contractAddress || 'N/A'}</p>
+            <p><strong>Contract Name:</strong> ${fullTokenData.sourceCode?.ContractName || 'N/A'}</p>
+            <p><strong>Compiler Version:</strong> ${fullTokenData.sourceCode?.CompilerVersion || 'N/A'}</p>
+            <div class="contract-links">
+              ${fullTokenData.sourceCode?.SourceCode ? `
+                <a href="https://etherscan.io/address/${contractAddress}#code" target="_blank" rel="noopener noreferrer" class="view-link">
+                  View Contract Code
+                </a>
+              ` : ''}
+              ${fullTokenData.abi ? `
+                <a href="https://etherscan.io/address/${contractAddress}#code" target="_blank" rel="noopener noreferrer" class="view-link">
+                  View Contract ABI
+                </a>
+              ` : ''}
+            </div>
+          </div>
         `;
-        
-        if (fullTokenData.sourceCode?.SourceCode) {
-          resultsHTML += `
-            <p>
-              <a href="https://etherscan.io/address/${contractAddress}#code" target="_blank" rel="noopener noreferrer" class="view-code-link">
-                View Contract Code
-              </a>
-            </p>
-          `;
-        }
-        
-        if (fullTokenData.abi) {
-          resultsHTML += `
-            <p>
-              <a href="https://etherscan.io/address/${contractAddress}#code" target="_blank" rel="noopener noreferrer" class="view-code-link">
-                View Contract ABI
-              </a>
-            </p>
-          `;
-        }
       }
       
       resultsHTML += `
@@ -127,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
       
       if (aiReview) {
-        const previewLength = 100;
+        const previewLength = 300;
         const previewText = aiReview.slice(0, previewLength) + (aiReview.length > previewLength ? '...' : '');
         let riskLevel = 'neutral';
         if (aiReview.includes('Low Risk')) riskLevel = 'low-risk';
@@ -138,7 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
           <h3>AI Analysis</h3>
           <div class="ai-review ${riskLevel}">
             <p class="preview">${previewText}</p>
-            <p class="full-text" style="display: none;">${aiReview}</p>
+            <div class="full-text" style="display: none;">
+              ${aiReview.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('')}
+            </div>
             <a href="#" class="toggle-view" data-target="ai-review">See More</a>
           </div>
         `;
@@ -146,18 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Add 1inch Data section with toggle
       if (oneInchData) {
-        resultsHTML += `
-          <h3>1inch Data</h3>
-          <div class="one-inch-data">
-            <div class="preview">
-              <p><strong>Token Symbol:</strong> ${oneInchData.tokenInfo?.symbol || 'N/A'}</p>
-            </div>
-            <div class="full-text" style="display: none;">
-              ${generateOneInchDataHTML(oneInchData, contractAddress)}
-            </div>
-            <a href="#" class="toggle-view" data-target="one-inch-data">See More</a>
-          </div>
-        `;
+        resultsHTML += generateOneInchDataHTML(oneInchData, contractAddress);
       }
       
       resultsElement.innerHTML = resultsHTML;
@@ -182,44 +179,75 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
       });
+
+      // Add event listener for back link
+      document.querySelector('.back-link').addEventListener('click', handleBack);
     }
+  }
+
+  function handleBack(e) {
+    e.preventDefault();
+    contractAddress = '';
+    tokenSummary = '';
+    fullTokenData = null;
+    aiReview = '';
+    oneInchData = null;
+    inputAddress = '';
+    updateUI();
   }
 
   function generateOneInchDataHTML(oneInchData, contractAddress) {
     let html = '';
     
+    if (oneInchData.error) {
+      html += `<p class="error">Error fetching 1inch data: ${oneInchData.error}</p>`;
+    }
+
+    html += `
+      <div class="one-inch-card">
+        <div class="one-inch-header">
+          <img src="images/1inch_without_text_white.png" alt="1inch Logo" class="one-inch-logo">
+          <h3>1inch Data</h3>
+        </div>
+    `;
+
     if (oneInchData.tokenInfo) {
       html += `
-        <h4>Token Info</h4>
-        <p><strong>Symbol:</strong> ${oneInchData.tokenInfo.symbol}</p>
-        <p><strong>Name:</strong> ${oneInchData.tokenInfo.name}</p>
-        <p><strong>Decimals:</strong> ${oneInchData.tokenInfo.decimals}</p>
+        <div class="token-info">
+          <h4>Token Info</h4>
+          <p><strong>Symbol:</strong> ${oneInchData.tokenInfo.symbol}, <strong>Name:</strong> ${oneInchData.tokenInfo.name}, <strong>Decimals:</strong> ${oneInchData.tokenInfo.decimals}</p>
+        </div>
       `;
     }
     
     if (oneInchData.balance) {
       html += `
-        <h4>Balance</h4>
-        <p><strong>Balance:</strong> ${oneInchData.balance[contractAddress]}</p>
+        <div class="token-balance">
+          <p><strong>Balance:</strong> ${oneInchData.balance[contractAddress]}</p>
+        </div>
       `;
     }
     
     if (oneInchData.liquiditySources) {
       html += `
-        <h4>Liquidity Sources</h4>
         <div class="liquidity-sources">
-          ${Object.entries(oneInchData.liquiditySources.protocols).map(([key, value]) => `
-            <div class="liquidity-source">
-              <div class="image-container">
-                <img src="${value.img || 'images/default-logo.png'}" alt="${value.title}" title="${value.title}" onerror="this.onerror=null; this.src='images/default-logo.png';">
+          <h4>Liquidity Sources</h4>
+          <div class="liquidity-sources-grid">
+            ${Object.entries(oneInchData.liquiditySources.protocols).map(([key, value]) => `
+              <div class="liquidity-source">
+                <div class="image-container">
+                  <img src="${value.img || 'images/default-logo.png'}" alt="${value.title}" title="${value.title}" onerror="this.onerror=null; this.src='images/default-logo.png';">
+                </div>
+                <span>${value.title}</span>
               </div>
-              <span>${value.title}</span>
-            </div>
-          `).join('')}
+            `).join('')}
+          </div>
         </div>
       `;
     }
-    
+
+    html += `</div>`; 
+
     return html;
   }
 
