@@ -1,7 +1,7 @@
 body {
   width: 400px;
-  background-color: #1e1e1e;
-  color: #e0e0e0;
+  background-color: #111827;
+  color: #F8FAFC;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -115,7 +115,7 @@ body {
 }
 
 .link {
-  color: #4caf50;
+  color: #009C59;
   text-decoration: none;
 }
 
@@ -138,23 +138,27 @@ body {
 }
 
 .ai-review.low-risk {
-  background-color: #e6ffe6;
-  border: 1px solid #4CAF50;
+  background-color: #DCFCE7;
+  border: 1px solid #009C59;
+  color: #1F2937;
 }
 
 .ai-review.moderate-risk {
-  background-color: #ffffcc;
-  border: 1px solid #FFD700;
+  background-color: #FEFCE8;
+  border: 1px solid #FFB310;
+  color: #1F2937;
 }
 
 .ai-review.high-risk {
-  background-color: #ffe6e6;
-  border: 1px solid #FF0000;
+  background-color: #FEE2E2;
+  border: 1px solid #B91C1C;
+  color: #1F2937;
 }
 
 .ai-review.neutral {
-  background-color: #f0f0f0;
-  border: 1px solid #808080;
+  background-color: #E2E8F0;
+  border: 1px solid #334155;
+  color: #1F2937;
 }
 
 .hidden {

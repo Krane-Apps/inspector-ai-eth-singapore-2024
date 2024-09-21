@@ -1,32 +1,31 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-:root,
-[data-theme] {
-  background: oklch(var(--b2));
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  min-height: 100vh;
+  @apply bg-background text-textDark;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  margin-bottom: 0.5rem;
-  line-height: 1;
+.btn-primary {
+  @apply bg-primary text-textDark;
 }
 
-p {
-  margin: 1rem 0;
+.btn-warning {
+  @apply bg-warningDark text-textLight;
 }
 
-.btn {
-  @apply shadow-md;
+.btn-danger {
+  @apply bg-dangerDark text-textLight;
 }
 
-.btn.btn-ghost {
-  @apply shadow-none;
+.btn-success {
+  @apply bg-successDark text-textLight;
+}
+
+.card {
+  @apply bg-card text-textLight;
+}
+
+.tag {
+  @apply bg-tagBg text-textLight;
 }

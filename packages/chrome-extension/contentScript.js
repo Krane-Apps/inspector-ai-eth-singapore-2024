@@ -22,9 +22,9 @@ function injectAiAuditButton() {
       const aiAuditButton = document.createElement('button');
       aiAuditButton.textContent = '✨ AI Audit';
       aiAuditButton.style.cssText = `
-        background-color: #6A0DAD;
+        background-color: #334155;
         border: none;
-        color: white;
+        color: #F8FAFC;
         padding: 5px 10px;
         font-size: 12px;
         margin-left: 10px;
