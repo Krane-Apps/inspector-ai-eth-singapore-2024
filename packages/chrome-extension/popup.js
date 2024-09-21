@@ -10,15 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
   let fullTokenData = null;
   let isLoading = false;
   let aiReview = '';
+  let oneInchData = null;
 
   // get initial data from storage
   chrome.storage.local.get(
-    ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview'],
+    ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData'],
     (result) => {
       contractAddress = result.contractAddress || '';
       tokenSummary = result.tokenSummary || '';
       fullTokenData = result.fullTokenData ? JSON.parse(result.fullTokenData) : null;
       aiReview = result.aiReview || '';
+      oneInchData = result.oneInchData ? JSON.parse(result.oneInchData) : null;
       updateUI();
     }
   );
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tokenSummary = '';
       fullTokenData = null;
       aiReview = '';
+      oneInchData = null;
       
       // send to background
       chrome.runtime.sendMessage(
@@ -57,13 +60,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // check results
   function checkForResults() {
     chrome.storage.local.get(
-      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview'],
+      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData'],
       (result) => {
         if (result.contractAddress === inputAddress.trim()) {
           contractAddress = result.contractAddress;
           tokenSummary = result.tokenSummary;
           fullTokenData = result.fullTokenData ? JSON.parse(result.fullTokenData) : null;
           aiReview = result.aiReview;
+          oneInchData = result.oneInchData ? JSON.parse(result.oneInchData) : null;
           isLoading = false;
         } else {
           // Retry
@@ -123,16 +127,100 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
       
       if (aiReview) {
+        const previewLength = 100;
+        const previewText = aiReview.slice(0, previewLength) + (aiReview.length > previewLength ? '...' : '');
+        let riskLevel = 'neutral';
+        if (aiReview.includes('Low Risk')) riskLevel = 'low-risk';
+        else if (aiReview.includes('Moderate Risk')) riskLevel = 'moderate-risk';
+        else if (aiReview.includes('High Risk')) riskLevel = 'high-risk';
+
         resultsHTML += `
-          <h3>OpenAI Analysis</h3>
-          <div class="ai-review">
-            <p>${aiReview}</p>
+          <h3>AI Analysis</h3>
+          <div class="ai-review ${riskLevel}">
+            <p class="preview">${previewText}</p>
+            <p class="full-text" style="display: none;">${aiReview}</p>
+            <a href="#" class="toggle-view" data-target="ai-review">See More</a>
+          </div>
+        `;
+      }
+      
+      // Add 1inch Data section with toggle
+      if (oneInchData) {
+        resultsHTML += `
+          <h3>1inch Data</h3>
+          <div class="one-inch-data">
+            <div class="preview">
+              <p><strong>Token Symbol:</strong> ${oneInchData.tokenInfo?.symbol || 'N/A'}</p>
+            </div>
+            <div class="full-text" style="display: none;">
+              ${generateOneInchDataHTML(oneInchData, contractAddress)}
+            </div>
+            <a href="#" class="toggle-view" data-target="one-inch-data">See More</a>
           </div>
         `;
       }
       
       resultsElement.innerHTML = resultsHTML;
+      
+      // Add event listeners for toggle links
+      document.querySelectorAll('.toggle-view').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = this.getAttribute('data-target');
+          const container = this.closest(`.${target}`);
+          const preview = container.querySelector('.preview');
+          const fullText = container.querySelector('.full-text');
+          
+          if (preview.style.display !== 'none') {
+            preview.style.display = 'none';
+            fullText.style.display = 'block';
+            this.textContent = 'See Less';
+          } else {
+            preview.style.display = 'block';
+            fullText.style.display = 'none';
+            this.textContent = 'See More';
+          }
+        });
+      });
     }
+  }
+
+  function generateOneInchDataHTML(oneInchData, contractAddress) {
+    let html = '';
+    
+    if (oneInchData.tokenInfo) {
+      html += `
+        <h4>Token Info</h4>
+        <p><strong>Symbol:</strong> ${oneInchData.tokenInfo.symbol}</p>
+        <p><strong>Name:</strong> ${oneInchData.tokenInfo.name}</p>
+        <p><strong>Decimals:</strong> ${oneInchData.tokenInfo.decimals}</p>
+      `;
+    }
+    
+    if (oneInchData.balance) {
+      html += `
+        <h4>Balance</h4>
+        <p><strong>Balance:</strong> ${oneInchData.balance[contractAddress]}</p>
+      `;
+    }
+    
+    if (oneInchData.liquiditySources) {
+      html += `
+        <h4>Liquidity Sources</h4>
+        <div class="liquidity-sources">
+          ${Object.entries(oneInchData.liquiditySources.protocols).map(([key, value]) => `
+            <div class="liquidity-source">
+              <div class="image-container">
+                <img src="${value.img || 'images/default-logo.png'}" alt="${value.title}" title="${value.title}" onerror="this.onerror=null; this.src='images/default-logo.png';">
+              </div>
+              <span>${value.title}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    return html;
   }
 
   // event listeners

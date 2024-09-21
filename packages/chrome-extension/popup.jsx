@@ -8,16 +8,18 @@ function Popup() {
   const [fullTokenData, setFullTokenData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [aiReview, setAiReview] = useState('');
+  const [oneInchData, setOneInchData] = useState(null);
 
   useEffect(() => {
     // get storage data
     chrome.storage.local.get(
-      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview'],
+      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData'],
       (result) => {
         setContractAddress(result.contractAddress || '');
         setTokenSummary(result.tokenSummary || '');
         setFullTokenData(result.fullTokenData ? JSON.parse(result.fullTokenData) : null);
         setAiReview(result.aiReview || '');
+        setOneInchData(result.oneInchData ? JSON.parse(result.oneInchData) : null);
       }
     );
   }, []);
@@ -152,6 +154,36 @@ function Popup() {
               <div className="ai-review">
                 <p>{aiReview}</p>
               </div>
+            </>
+          )}
+          
+          {oneInchData && (
+            <>
+              <h3>1inch Data</h3>
+              {oneInchData.tokenInfo && (
+                <div>
+                  <h4>Token Info</h4>
+                  <p><strong>Symbol:</strong> {oneInchData.tokenInfo.symbol}</p>
+                  <p><strong>Name:</strong> {oneInchData.tokenInfo.name}</p>
+                  <p><strong>Decimals:</strong> {oneInchData.tokenInfo.decimals}</p>
+                </div>
+              )}
+              {oneInchData.balance && (
+                <div>
+                  <h4>Balance</h4>
+                  <p><strong>Balance:</strong> {oneInchData.balance[contractAddress]}</p>
+                </div>
+              )}
+              {oneInchData.liquiditySources && (
+                <div>
+                  <h4>Liquidity Sources</h4>
+                  <ul>
+                    {Object.entries(oneInchData.liquiditySources.protocols).map(([key, value]) => (
+                      <li key={key}>{value.title}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </>
           )}
         </div>

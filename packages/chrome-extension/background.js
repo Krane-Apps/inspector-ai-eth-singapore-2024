@@ -21,9 +21,13 @@ async function analyzeContract(address) {
       throw new Error('failed to fetch token data');
     }
 
+    // New: Fetch 1inch data
+    const oneInchData = await fetch1inchData(address);
+
     const aiReview = await getAIReview({
       contractAddress: address,
       sourceCode: allData.sourceCode,
+      oneInchData: oneInchData,
     });
 
     const summary = generateSummary(aiReview);
@@ -32,6 +36,7 @@ async function analyzeContract(address) {
       contractAddress: address,
       tokenSummary: summary,
       fullTokenData: JSON.stringify(allData),
+      oneInchData: JSON.stringify(oneInchData),
       aiReview: aiReview,
     });
 
@@ -39,6 +44,35 @@ async function analyzeContract(address) {
   } catch (error) {
     console.error('background.js: error in analyzeContract:', error);
     throw error;
+  }
+}
+
+async function fetch1inchData(address) {
+  const baseUrl = 'https://inspector-proxy.replit.app/';
+  const oneInchData = {};
+
+  try {
+    // fetch token info
+    const tokenInfoUrl = `${baseUrl}?url=https://api.1inch.dev/swap/v5.2/1/tokens`;
+    const tokenInfoResponse = await fetch(tokenInfoUrl);
+    const tokenInfoData = await tokenInfoResponse.json();
+    oneInchData.tokenInfo = tokenInfoData.tokens[address];
+
+    // fetch token balance
+    const balanceUrl = `${baseUrl}?url=https://api.1inch.dev/balance/v1.2/1/balances/${address}`;
+    const balanceResponse = await fetch(balanceUrl);
+    oneInchData.balance = await balanceResponse.json();
+
+    // fetch liquidity sources
+    const liquiditySourcesUrl = `${baseUrl}?url=https://api.1inch.dev/swap/v5.2/1/liquidity-sources`;
+    const liquiditySourcesResponse = await fetch(liquiditySourcesUrl);
+    oneInchData.liquiditySources = await liquiditySourcesResponse.json();
+
+    console.log('1inch data:', oneInchData);
+    return oneInchData;
+  } catch (error) {
+    console.error('Error fetching 1inch data:', error);
+    return null;
   }
 }
 
@@ -92,6 +126,11 @@ async function getAIReview(contractData) {
     Compiler Version: ${contractData.sourceCode?.CompilerVersion || 'N/A'}
     Source Code: ${contractData.sourceCode?.SourceCode || 'N/A'}
     
+    1inch Data:
+    Token Info: ${JSON.stringify(contractData.oneInchData?.tokenInfo || {})}
+    Balance: ${JSON.stringify(contractData.oneInchData?.balance || {})}
+    Liquidity Sources: ${JSON.stringify(contractData.oneInchData?.liquiditySources || {})}
+    
     Provide a comprehensive analysis of the contract's functionality, potential vulnerabilities, and overall assessment. Focus on the following points:
 
     1. Contract purpose and main features
@@ -100,6 +139,7 @@ async function getAIReview(contractData) {
     4. Potential vulnerabilities or red flags
     5. Unusual or noteworthy functions
     6. Compliance with standard practices
+    7. Analysis of 1inch data (token info, balance, and liquidity sources)
 
     Based on your analysis, categorize the contract's risk level as one of the following:
     - "High Risk": If the contract has significant vulnerabilities or suspicious features

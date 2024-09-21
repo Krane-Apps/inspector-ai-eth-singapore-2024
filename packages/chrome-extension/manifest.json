@@ -7,7 +7,8 @@
     "activeTab",
     "scripting",
     "tabs",
-    "storage"
+    "storage",
+    "https://inspector-proxy.replit.app/*"
   ],
   "host_permissions": [
     "https://api.etherscan.io/*",
