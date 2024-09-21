@@ -1,4 +1,4 @@
-## Overview
+# Overview
 
 Simple1inchProxy is a Node.js server designed to forward requests to the 1inch API, adding an authorization header. It's useful for integrating 1inch API calls into applications that require server-side request management.
 

@@ -2,52 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { EvmChains, SignProtocolClient, SpMode } from "@ethsign/sp-sdk";
-import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
+
+// import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 export default function ReviewSubmission() {
   const router = useRouter();
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  // Remove the unused state
-  const { writeContractAsync } = useScaffoldWriteContract({
-    contractName: "InspectorAI",
-    functionName: "addReview",
-  } as any); // Note: Use type assertions cautiously
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
 
-  const createAttestation = async () => {
-    // Implement attestation logic here
-    // const client = new SignProtocolClient(SpMode.OnChain, {
-    //   chain: EvmChains.polygonMumbai,
-    // });
-    // await client.createAttestation({
-    //   schemaId: "0x...", // Replace with your schema ID
-    //   data: {
-    //     reviewer: contractAddress,
-    //     badge: "First Comment",
-    //   },
-    // });
-  };
-
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  // const { writeAsync: sendAddReviewTx, isMining } = useScaffoldWriteContract({
+  //   contractName: "InspectorAI",
+  //   functionName: "addReview",
+  //   args: [BigInt(rating), comment],
+  // });
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     try {
-      await writeContractAsync({
-        address: contractAddress, // Add this line
-        args: [rating, comment],
-      });
-      await createAttestation();
+      // const tx = await sendAddReviewTx();
+      // console.log("Review submitted successfully:", tx);
       notification.success("Review submitted successfully!");
       router.push("/success");
     } catch (error) {
       console.error("Error submitting review:", error);
       notification.error("Failed to submit review. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -76,8 +54,8 @@ export default function ReviewSubmission() {
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
           ></textarea>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary" onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? "Submitting..." : "Submit Review"}
+            <button className="btn btn-primary" onClick={handleSubmit} disabled={false}>
+              Submit Review
             </button>
           </div>
         </div>
