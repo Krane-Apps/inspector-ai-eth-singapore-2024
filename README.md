@@ -1,15 +1,17 @@
-# <img src="packages/chrome-extension/images/logo.gif" alt="InspectorAI Logo" width="30" height="30" style="vertical-align: middle;"> InspectorAI: Smart Contract Analysis Tool
+# InspectorAI: Smart Contract Analysis Tool
 
+![logo](https://github.com/user-attachments/assets/10651b58-1b55-4b3d-a160-7157fb3aa135)
 InspectorAI is a powerful tool designed to analyze and provide insights into smart contracts across multiple blockchain networks. It combines the capabilities of AI with blockchain technology to offer developers and users a comprehensive understanding of contract functionality and potential issues.
 
 ## Contract Addresses
 
-| Chain     | Contract Type | Address                                                                                                                                            |
-| --------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sepolia   | Chainlink     | [0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5](https://sepolia.etherscan.io/address/0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5)                      |
-| Sepolia   | Basic         | [0x1c0042641A974a4411234DD68dfF22e9765e416F](https://sepolia.etherscan.io/address/0x1c0042641A974a4411234DD68dfF22e9765e416F)                      |
-| Rootstock | Basic         | [0x78858Ab1Ad13C0a5829e06f89A9706a9Ba9A6791](https://explorer.testnet.rootstock.io/address/0x78858ab1ad13c0a5829e06f89a9706a9ba9a6791?__ctab=Code) |
-| Morph     | Basic         | [0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7](https://explorer-holesky.morphl2.io/address/0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7?tab=contract)  |
+| Chain     | Contract Type        | Address                                                                                                                                            |
+| --------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sepolia   | Chainlink CCIP       | [0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5](https://sepolia.etherscan.io/address/0x5aFCB399ef40DB5b77DC09AA02C53f5aee5744a5)                      |
+| Sepolia   | Basic                | [0x1c0042641A974a4411234DD68dfF22e9765e416F](https://sepolia.etherscan.io/address/0x1c0042641A974a4411234DD68dfF22e9765e416F)                      |
+| Rootstock | Basic                | [0x78858Ab1Ad13C0a5829e06f89A9706a9Ba9A6791](https://explorer.testnet.rootstock.io/address/0x78858ab1ad13c0a5829e06f89a9706a9ba9a6791?__ctab=Code) |
+| Morph     | Basic                | [0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7](https://explorer-holesky.morphl2.io/address/0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7?tab=contract)  |
+| Sepolia   | Sign Protocol Schema | [0x271](https://testnet-scan.sign.global/schema/onchain_evm_11155111_0x271)                                                                        |
 
 ## The Problem
 
@@ -25,10 +27,18 @@ Smart contracts are becoming increasingly complex and critical in the blockchain
 
 To start using InspectorAI:
 
-1. Visit our web application at [https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum](https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum)
-2. Connect your wallet and select the network you want to analyze
-3. Input the smart contract address or code you wish to inspect
-4. Review the AI-generated analysis and recommendations
+1. Chrome Extension:
+
+    - You can install the Chrome extension by cloning this repo and loading it as an unpacked extension in Chrome.
+    - We have submitted the extension for review on the Chrome Web Store, but it is currently pending approval. This process can take a few days.
+    - Please refer to the image below to see the current review status:
+
+    ![Chrome Web Store Review Status](https://github.com/user-attachments/assets/00a8f9d0-db53-4c93-9541-507128031404)
+
+2. Visit our web application at [https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum](https://inspector-ai-wine.vercel.app/?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&chain=ethereum)
+3. Connect your wallet and select the network you want to analyze
+4. Input the smart contract address or code you wish to inspect
+5. Review the AI-generated analysis and recommendations
 
 For developers looking to contribute or run the project locally, please refer to the "Deployment and Verification" section above.
 
