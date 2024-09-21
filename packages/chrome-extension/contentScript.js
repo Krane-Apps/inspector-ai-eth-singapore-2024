@@ -42,7 +42,7 @@ function injectAiAuditButton() {
           },
           (response) => {
             if (response.success) {
-              alert('Contract analysis started. Please check the InspectorAI extension popup for results.');
+              alert('Contract analysis started. Check the InspectorAI extension for a brief summary.');
             } else {
               alert('Error starting contract analysis: ' + response.error);
             }

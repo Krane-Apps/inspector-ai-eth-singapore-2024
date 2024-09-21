@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultsElement = document.getElementById('results');
   const searchBarElement = document.getElementById('searchBar');
   const backButtonElement = document.createElement('a');
+  const reviewButtonContainer = document.getElementById('reviewButtonContainer');
+  const writeReviewButton = document.getElementById('writeReviewButton');
 
   backButtonElement.textContent = '← back';
   backButtonElement.className = 'back-link';
@@ -18,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let isLoading = false;
   let aiReview = '';
   let oneInchData = null;
+  let currentContractAddress = '';
+  let currentChain = 'sepolia'; // Default chain
 
   // get initial data from storage
   chrome.storage.local.get(
@@ -122,15 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
               ` : ''}
             </div>
           </div>
-        `;
+       
+          `;
       }
-      
-      resultsHTML += `
-        <h3>Summary</h3>
-        <div class="summary-container">
-          <pre class="summary-text">${tokenSummary}</pre>
-        </div>
-      `;
       
       if (aiReview) {
         const previewLength = 300;
@@ -143,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsHTML += `
           <h3>AI Analysis</h3>
           <div class="ai-review ${riskLevel}">
+            <pre class="summary-text">${tokenSummary}</pre>
             <p class="preview">${previewText}</p>
             <div class="full-text" style="display: none;">
               ${aiReview.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('')}
@@ -151,6 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         `;
       }
+      
+      // add the "Write a Review" button
+      resultsHTML += `
+        <div id="reviewButtonContainer" class="review-button-container">
+          <button id="writeReviewButton" class="write-review-btn">Write a Review</button>
+        </div>
+      `;
       
       // Add 1inch Data section with toggle
       if (oneInchData) {
@@ -182,6 +188,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Add event listener for back link
       document.querySelector('.back-link').addEventListener('click', handleBack);
+
+      // Add event listener for the "Write a Review" button
+      const writeReviewButton = document.getElementById('writeReviewButton');
+      if (writeReviewButton) {
+        writeReviewButton.addEventListener('click', function() {
+          const reviewUrl = `https://inspector-ai-wine.vercel.app/?address=${contractAddress}&chain=${currentChain}`;
+          chrome.tabs.create({ url: reviewUrl });
+        });
+      }
     }
   }
 

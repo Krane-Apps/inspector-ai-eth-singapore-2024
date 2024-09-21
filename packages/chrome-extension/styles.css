@@ -1,6 +1,6 @@
 body {
   width: 400px;
-  background-color: #111827;
+  background-color: #334155;
   color: #F8FAFC;
   font-family: Arial, sans-serif;
   margin: 0;
@@ -18,21 +18,23 @@ body {
 }
 
 .logo {
-  width: 24px;
-  height: 24px;
-  margin-right: 0.5rem;
+  width: 60px; 
+  height: 60px; 
+  margin-right: 10px;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 24px;  
   font-weight: bold;
   color: #ffffff;
   margin: 0;
+
 }
 
 .search-bar {
   display: flex;
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .input-field {
@@ -43,6 +45,7 @@ body {
   border-radius: 4px 0 0 4px;
   background-color: #2a2a2a;
   color: #e0e0e0;
+  width: 60%;
 }
 
 .analyze-button {
@@ -95,6 +98,7 @@ body {
   display: flex;
   align-items: flex-start;
   margin-bottom: 1rem;
+  background-color: transparent;
 }
 
 .tone-image {
@@ -109,7 +113,7 @@ body {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 12px;
-  background-color: #2a2a2a;
+  background-color: transparent;
   padding: 0.5rem;
   border-radius: 4px;
 }
@@ -138,19 +142,19 @@ body {
 }
 
 .ai-review.low-risk {
-  background-color: #DCFCE7;
+  background-color: #009C59;
   border: 1px solid #009C59;
   color: #1F2937;
 }
 
 .ai-review.moderate-risk {
-  background-color: #FEFCE8;
+  background-color: #FFB310;
   border: 1px solid #FFB310;
   color: #1F2937;
 }
 
 .ai-review.high-risk {
-  background-color: #FEE2E2;
+  background-color: #B91C1C;
   border: 1px solid #B91C1C;
   color: #1F2937;
 }
@@ -354,4 +358,29 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.review-button-container {
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+.write-review-btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.write-review-btn:hover {
+  background-color: #45a049;
 }

@@ -148,7 +148,7 @@ async function getAIReview(contractData) {
   const apiKey = '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';
   const url = 'https://api.anthropic.com/v1/messages';
 
-  const prompt = `Analyze the following smart contract in great detail:
+  const prompt = `Analyze the following smart contract briefly:
     Contract Address: ${contractData.contractAddress}
     Contract Name: ${contractData.sourceCode?.ContractName || 'N/A'}
     Compiler Version: ${contractData.sourceCode?.CompilerVersion || 'N/A'}
@@ -161,7 +161,7 @@ async function getAIReview(contractData) {
     Token Transactions (last 100):
     ${JSON.stringify(contractData.oneInchData?.transactions || [])}
     
-    Provide an extremely comprehensive and detailed analysis of the contract's functionality, potential vulnerabilities, and overall assessment. Focus on the following points:
+    Provide a concise analysis of the contract's functionality and potential risks. Focus on:
 
     1. Contract purpose and main features (go into depth on each feature)
     2. Token economics (if applicable, provide a detailed breakdown)
@@ -183,9 +183,7 @@ async function getAIReview(contractData) {
     
     Include the exact risk level phrase in your response.
     
-    Conclude with a detailed summary of the contract's strengths and weaknesses, and provide comprehensive recommendations for users interacting with this contract.
-
-    Be as thorough and detailed as possible in your analysis, using all the available information.`;
+    Keep your response under 150 words, using simple language.`;
 
   try {
     const response = await fetch(url, {
@@ -221,14 +219,11 @@ async function getAIReview(contractData) {
 }
 
 function generateSummary(aiReview) {
-  if (aiReview.includes('High Risk')) {
-    return '⛔ High Risk: The contract has significant vulnerabilities or suspicious features.';
-  } else if (aiReview.includes('Moderate Risk')) {
-    return '⛔ Moderate Risk: The contract has some potential issues that require caution.';
-  } else if (aiReview.includes('Low Risk')) {
-    return '✅ Low Risk: The contract appears to be relatively safe, but always exercise caution.';
+  const riskLevel = aiReview.match(/(High|Moderate|Low) Risk/);
+  if (riskLevel) {
+    return `${riskLevel[0]}: ${aiReview.split(riskLevel[0])[1].trim().split('.')[0]}.`;
   }
-  return 'Neutral: Unable to determine risk level. Please review the full AI analysis.';
+  return 'Unable to determine risk level. Please review the full AI analysis.';
 }
 
 console.log('InspectorAI background script loaded');
