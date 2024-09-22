@@ -21,7 +21,6 @@ async function analyzeContract(address) {
       throw new Error('failed to fetch token data');
     }
 
-    // New: Fetch 1inch data
     const oneInchData = await fetch1inchData(address);
 
     const aiReview = await getAIReview({
@@ -32,12 +31,16 @@ async function analyzeContract(address) {
 
     const summary = generateSummary(aiReview);
 
+    // Call getGaiaAnalysis with the source code
+    const gaiaAnalysis = await getGaiaAnalysis(allData.sourceCode);
+
     chrome.storage.local.set({
       contractAddress: address,
       tokenSummary: summary,
       fullTokenData: JSON.stringify(allData),
       oneInchData: JSON.stringify(oneInchData),
       aiReview: aiReview,
+      gaiaAnalysis: gaiaAnalysis,
     });
 
     console.log('background.js: contract analysis completed');
@@ -224,6 +227,49 @@ function generateSummary(aiReview) {
     return `${riskLevel[0]}: ${aiReview.split(riskLevel[0])[1].trim().split('.')[0]}.`;
   }
   return 'Unable to determine risk level. Please review the full AI analysis.';
+}
+
+async function getGaiaAnalysis(sourceCode) {
+  const url = 'https://0x63d19362cd5caf0f482662dafd51835053ca360c.us.gaianet.network/v1/chat/completions';
+  const prompt = `Analyze this ERC20 contract for top 3 potential vulnerabilities:
+
+${sourceCode.SourceCode || 'N/A'}
+
+Provide a brief analysis of risks and security recommendations.`;
+
+  try {
+    console.log('background.js: Calling Gaia API');
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: "You are an ERC20 security expert. Be concise." },
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('background.js: Gaia API Response:', data);
+
+    if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+      return data.choices[0].message.content;
+    } else {
+      console.error('background.js: Unexpected Gaia API response structure:', data);
+      return 'Error: Unexpected API response structure.';
+    }
+  } catch (error) {
+    console.error('background.js: Error calling Gaia API:', error);
+    return 'Error generating Gaia analysis: ' + error.message;
+  }
 }
 
 console.log('InspectorAI background script loaded');

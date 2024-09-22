@@ -103,6 +103,496 @@ const deployedContracts = {
       inheritedFunctions: {},
     },
   },
+  11155111: {
+    InspectorAI: {
+      address: "0x1c0042641A974a4411234DD68dfF22e9765e416F",
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "contractAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reviewer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "rating",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "comment",
+              type: "string",
+            },
+          ],
+          name: "ReviewAdded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "_rating",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_comment",
+              type: "string",
+            },
+          ],
+          name: "addReview",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+          ],
+          name: "getReviews",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "reviewer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "rating",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "comment",
+                  type: "string",
+                },
+              ],
+              internalType: "struct InspectorAI.Review[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+  31: {
+    InspectorAI: {
+      address: "0x78858Ab1Ad13C0a5829e06f89A9706a9Ba9A6791",
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "contractAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reviewer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "rating",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "comment",
+              type: "string",
+            },
+          ],
+          name: "ReviewAdded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "_rating",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_comment",
+              type: "string",
+            },
+          ],
+          name: "addReview",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+          ],
+          name: "getReviews",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "reviewer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "rating",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "comment",
+                  type: "string",
+                },
+              ],
+              internalType: "struct InspectorAI.Review[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+  1131: {
+    InspectorAI: {
+      address: "0x6dc71cf8907E9BA2C268615a80300AD6d3622fD7",
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "contractAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reviewer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "rating",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "comment",
+              type: "string",
+            },
+          ],
+          name: "ReviewAdded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "_rating",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_comment",
+              type: "string",
+            },
+          ],
+          name: "addReview",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+          ],
+          name: "getReviews",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "reviewer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "rating",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "comment",
+                  type: "string",
+                },
+              ],
+              internalType: "struct InspectorAI.Review[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+  59140: {
+    InspectorAI: {
+      address: "0x1c0042641A974a4411234DD68dfF22e9765e416F", // Using Sepolia address as placeholder
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "contractAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reviewer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "rating",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "comment",
+              type: "string",
+            },
+          ],
+          name: "ReviewAdded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "_rating",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_comment",
+              type: "string",
+            },
+          ],
+          name: "addReview",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+          ],
+          name: "getReviews",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "reviewer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "rating",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "comment",
+                  type: "string",
+                },
+              ],
+              internalType: "struct InspectorAI.Review[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+  296: {
+    InspectorAI: {
+      address: "0x1c0042641A974a4411234DD68dfF22e9765e416F", // Using Sepolia address as placeholder
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "contractAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reviewer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "rating",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "comment",
+              type: "string",
+            },
+          ],
+          name: "ReviewAdded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "_rating",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_comment",
+              type: "string",
+            },
+          ],
+          name: "addReview",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_contractAddress",
+              type: "address",
+            },
+          ],
+          name: "getReviews",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "reviewer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "rating",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "comment",
+                  type: "string",
+                },
+              ],
+              internalType: "struct InspectorAI.Review[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
 } as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

@@ -22,16 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
   let oneInchData = null;
   let currentContractAddress = '';
   let currentChain = 'sepolia'; // Default chain
+  let gaiaAnalysis = '';
 
   // get initial data from storage
   chrome.storage.local.get(
-    ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData'],
+    ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData', 'gaiaAnalysis'],
     (result) => {
       contractAddress = result.contractAddress || '';
       tokenSummary = result.tokenSummary || '';
       fullTokenData = result.fullTokenData ? JSON.parse(result.fullTokenData) : null;
       aiReview = result.aiReview || '';
       oneInchData = result.oneInchData ? JSON.parse(result.oneInchData) : null;
+      gaiaAnalysis = result.gaiaAnalysis || '';
       updateUI();
     }
   );
@@ -47,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fullTokenData = null;
       aiReview = '';
       oneInchData = null;
+      gaiaAnalysis = '';
       
       // send to background
       chrome.runtime.sendMessage(
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // check results
   function checkForResults() {
     chrome.storage.local.get(
-      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData'],
+      ['contractAddress', 'tokenSummary', 'fullTokenData', 'aiReview', 'oneInchData', 'gaiaAnalysis'],
       (result) => {
         if (result.contractAddress === inputAddress.trim()) {
           contractAddress = result.contractAddress;
@@ -80,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
           fullTokenData = result.fullTokenData ? JSON.parse(result.fullTokenData) : null;
           aiReview = result.aiReview;
           oneInchData = result.oneInchData ? JSON.parse(result.oneInchData) : null;
+          gaiaAnalysis = result.gaiaAnalysis; // Make sure this line is present
           isLoading = false;
           updateUI();
         } else {
@@ -151,6 +155,23 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
       }
       
+      // add Gaia Analysis section
+      if (gaiaAnalysis) {
+        const previewLength = 300;
+        const previewText = gaiaAnalysis.slice(0, previewLength) + (gaiaAnalysis.length > previewLength ? '...' : '');
+
+        resultsHTML += `
+          <h3>Gaia Analysis</h3>
+          <div class="gaia-analysis">
+            <p class="preview">${previewText}</p>
+            <div class="full-text" style="display: none;">
+              ${gaiaAnalysis.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('')}
+            </div>
+            <a href="#" class="toggle-view" data-target="gaia-analysis">See More</a>
+          </div>
+        `;
+      }
+      
       // add the "Write a Review" button
       resultsHTML += `
         <div id="reviewButtonContainer" class="review-button-container">
@@ -207,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fullTokenData = null;
     aiReview = '';
     oneInchData = null;
+    gaiaAnalysis = '';
     inputAddress = '';
     updateUI();
   }
